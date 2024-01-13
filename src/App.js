@@ -16,9 +16,8 @@ import wind from './img/wind.png'
 const App = () => {
   const [city, setCity] = useState('delhi')
   const [empty, setEmpty] = useState(false);
-  const [notMatchCity, setNotMatchCity] = useState(false)
   const dispatch = useDispatch();
-  const { data, error } = useSelector(weatherSelecter);
+  const { data} = useSelector(weatherSelecter);
   useEffect(() => {
     dispatch(weaterApi(city))
     setCity('')
@@ -29,7 +28,6 @@ const App = () => {
       dispatch(weaterApi(city));
       setCity('');
       setEmpty(false)
-      setNotMatchCity(false)
     }
     else {
       setEmpty(true)
