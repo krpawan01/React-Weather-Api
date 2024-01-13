@@ -89,7 +89,6 @@ const App = () => {
               <h2 className="city">{data?.city.name}</h2>
             </div>
           </div>
-          <div className="graph"></div>
           <div className="details">
             <div className="col">
               <img src={himidity} alt='himidity' />
@@ -131,9 +130,9 @@ const App = () => {
           </div>
           {/* forecase 5 day weather  */}
           <div className="forecase">
-            {data?.list?.slice(1).map((d) => (
+            {data?.list?.slice(1).map((d, i) => (
               <>
-                <div className="boxes">
+                <div key={i} className="boxes">
                   <div className="date">
                     {d.dt_txt}
                   </div>
