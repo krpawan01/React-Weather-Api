@@ -156,12 +156,34 @@ img {
   color: lightgray;
 }
 
+/* scroll bar */
+body::-webkit-scrollbar {
+  display: none;
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: orange;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: blue;
+  border-radius: 20px;
+  border: 3px solid orange;
+}
+
 @media (max-width: 970px) {
   .card {
     width: 90%;
   }
   .search input {
     width: 80%;
+  }
+  ::-webkit-scrollbar {
+    display: none;
   }
 }
 @media (max-width: 720px) {
