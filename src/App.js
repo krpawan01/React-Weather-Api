@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './App.css'
 import { useDispatch, useSelector } from 'react-redux';
 import { weaterApi, weatherSelecter } from './reducer/weatherToolkit';
 import { CiSearch } from "react-icons/ci";
+import { FaCircleArrowLeft, FaCircleArrowRight } from "react-icons/fa6";
 // image import 
 import clear from './img/clear.png';
 import clouds from './img/clouds.png'
@@ -30,7 +31,7 @@ const App = () => {
       setEmpty(false)
       setNotMatchCity(false)
     }
-     else {
+    else {
       setEmpty(true)
     }
   }
@@ -52,6 +53,26 @@ const App = () => {
     dir = 'South'
   } else {
     dir = 'West'
+  }
+
+  // scroll bar 
+  const listRef = useRef(null);
+
+  const handleScroll = (scrollValue) => {
+    if (listRef.current) {
+      const currentScrollLeft = listRef.current.scrollLeft;
+      const duration = 1000;
+      const startTime = performance.now();
+      const animateScroll = (currentTime) => {
+        const elapsedTime = currentTime - startTime;
+        const progress = Math.min(elapsedTime / duration, 1);
+        listRef.current.scrollLeft = currentScrollLeft + progress * scrollValue;
+        if (progress < 1) {
+          requestAnimationFrame(animateScroll);
+        }
+      };
+      requestAnimationFrame(animateScroll);
+    }
   }
 
 
@@ -129,46 +150,51 @@ const App = () => {
             </div>
           </div>
           {/* forecase 5 day weather  */}
-          <div className="forecase">
-            {data?.list?.slice(1).map((d, i) => (
-              <>
-                <div key={i} className="boxes">
-                  <div className="date">
-                    {d.dt_txt}
-                  </div>
-                  <div className="image">
-                    <img src={d.weather[0].main === 'Clear'
-                      ? clear
-                      : d.weather[0].main === 'Rain'
-                        ? rain
-                        : d.weather[0].main === 'Snow'
-                          ? snow
-                          : d.weather[0].main === 'Clouds'
-                            ? clouds
-                            : mist} alt="img" />
-                  </div>
-                  <div className="second">
-                    <div>
-                      <p>{d.main.temp}°C</p>
+          <div className="forecase-container">
+            <FaCircleArrowLeft className='left btn' onClick={() => handleScroll(-500)} />
+            <FaCircleArrowRight className='right btn' onClick={() => handleScroll(500)} />
+            {/* <FaCircleArrowRight /> */}
+            <div className="forecase" ref={listRef}>
+              {data?.list?.slice(1).map((d, i) => (
+                <>
+                  <div key={i} className="boxes">
+                    <div className="date">
+                      {d.dt_txt}
                     </div>
-                    <div>
-                      <p>{d.weather[0].description}</p>
+                    <div className="image">
+                      <img src={d.weather[0].main === 'Clear'
+                        ? clear
+                        : d.weather[0].main === 'Rain'
+                          ? rain
+                          : d.weather[0].main === 'Snow'
+                            ? snow
+                            : d.weather[0].main === 'Clouds'
+                              ? clouds
+                              : mist} alt="img" />
+                    </div>
+                    <div className="second">
+                      <div>
+                        <p>{d.main.temp}°C</p>
+                      </div>
+                      <div>
+                        <p>{d.weather[0].description}</p>
+                      </div>
+                    </div>
+                    <div className="third">
+                      <div>
+                        <p>{d.main.humidity}%</p>
+                        <p className='light'>humidity</p>
+                      </div>
+                      <div>
+                        <p>{d.wind.speed}km/h</p>
+                        <p className='light'>wind speed</p>
+                      </div>
                     </div>
                   </div>
-                  <div className="third">
-                    <div>
-                      <p>{d.main.humidity}%</p>
-                      <p className='light'>humidity</p>
-                    </div>
-                    <div>
-                      <p>{d.wind.speed}km/h</p>
-                      <p className='light'>wind speed</p>
-                    </div>
-                  </div>
-                </div>
-              </>
-            ))}
+                </>
+              ))}
 
+            </div>
           </div>
         </div>
       </>}
